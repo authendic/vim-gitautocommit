@@ -1,0 +1,6 @@
+filetype off
+let &runtimepath .= ',' . expand('<sfile>:p:h:h')
+let &runtimepath .= ',' . expand('$HOME') . '/.config/nvim/plugged/vader.vim'
+filetype plugin indent on
+syntax enable
+

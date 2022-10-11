@@ -1,0 +1,31 @@
+Before:
+  let g:git_auto_commit_fake_run = 1
+  let g:git_auto_commit_modify_lines_threshold = 5
+
+  let g:root_path = expand('%:p:h') . '/'
+  let g:srcfile = g:root_path. 'test/testrc'
+  let g:dstfile = g:root_path. 'test/empty.md'
+
+Execute(not need commit src):
+  AssertEqual 0, git_auto#need_commit(g:srcfile)
+
+Execute(not need commit not track file):
+  AssertEqual 0, git_auto#need_commit("/etc/hosts")
+
+Execute(need commit when modify):
+  let cmd = printf("cp %s %s", g:srcfile, g:dstfile)
+  call system(cmd)
+  AssertEqual 1, git_auto#need_commit(g:dstfile), "modify need commit"
+
+
+Execute(not need commit):
+  let cmd = printf("git checkout -f %s", g:dstfile)
+  call system(cmd)
+  AssertEqual 0, git_auto#need_commit(g:dstfile), 'revert, not need commit'
+
+Execute(call commit):
+  let cmd = printf("cp %s %s", g:srcfile, g:dstfile)
+  call system(cmd)
+  AssertEqual 1, git_auto#commit(g:dstfile)
+  let cmd = printf("git checkout -f %s", g:dstfile)
+  call system(cmd)
