@@ -58,7 +58,7 @@ function! git_auto#commit(...)
     if a:0 > 0
         let filename = a:1
     else
-        let filename = expand('%:p')
+        let filename = expand('%:t')
     endif
     if ! git_auto#need_commit(filename)
       return 0
